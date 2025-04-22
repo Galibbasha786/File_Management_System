@@ -80,6 +80,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify OTP - <?php echo APP_NAME; ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .otp-input {
+            width: 40px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .otp-input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .hidden-otp {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -92,15 +115,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <p>We've sent an OTP to your email. Please enter it below to verify your account.</p>
             
-            <form method="POST" action="">
-                <div class="form-group">
-                    <label for="otp">OTP</label>
-                    <input type="text" id="otp" name="otp" required>
+            <form method="POST" action="" id="otpForm">
+                <div class="otp-container">
+                    <input type="text" class="otp-input" maxlength="1" data-index="1" autofocus>
+                    <input type="text" class="otp-input" maxlength="1" data-index="2">
+                    <input type="text" class="otp-input" maxlength="1" data-index="3">
+                    <input type="text" class="otp-input" maxlength="1" data-index="4">
+                    <input type="text" class="otp-input" maxlength="1" data-index="5">
+                    <input type="text" class="otp-input" maxlength="1" data-index="6">
                 </div>
+                
+                <!-- Hidden input that will contain the full OTP -->
+                <input type="text" name="otp" id="fullOtp" class="hidden-otp" required>
                 
                 <button type="submit" class="btn">Verify</button>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const fullOtpInput = document.getElementById('fullOtp');
+            const form = document.getElementById('otpForm');
+            
+            // Focus first input on load
+            otpInputs[0].focus();
+            
+            // Handle input events
+            otpInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    const index = parseInt(e.target.dataset.index);
+                    
+                    // If input has value, move to next input
+                    if (value.length === 1 && index < otpInputs.length) {
+                        otpInputs[index].focus();
+                    }
+                    
+                    // Update the hidden full OTP field
+                    updateFullOtp();
+                });
+                
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && e.target.value === '') {
+                        const index = parseInt(e.target.dataset.index);
+                        if (index > 1) {
+                            otpInputs[index - 2].focus();
+                        }
+                    }
+                    updateFullOtp();
+                });
+            });
+            
+            // Update the hidden full OTP field
+            function updateFullOtp() {
+                let otp = '';
+                otpInputs.forEach(input => {
+                    otp += input.value;
+                });
+                fullOtpInput.value = otp;
+            }
+            
+            // Validate OTP length before form submission
+            form.addEventListener('submit', function(e) {
+                updateFullOtp();
+                if (fullOtpInput.value.length !== otpInputs.length) {
+                    e.preventDefault();
+                    alert('Please enter the complete OTP code.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
