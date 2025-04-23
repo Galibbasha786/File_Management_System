@@ -202,4 +202,35 @@ function generateShareableLink($fileId, $userId) {
 
     return false;
 }
+/**
+ * Deletes a user from the database
+ * 
+ * @param int $userId The ID of the user to delete
+ * @return bool True if deletion was successful, false otherwise
+ */
+function deleteUser($userId) {
+    global $pdo;
+    
+    try {
+        // Begin transaction
+        $pdo->beginTransaction();
+        
+        // First, delete any related records in other tables (if needed)
+        // Example: $pdo->prepare("DELETE FROM user_files WHERE user_id = ?")->execute([$userId]);
+        
+        // Then delete the user
+        $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        
+        // Commit transaction
+        $pdo->commit();
+        
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        // Rollback transaction if something failed
+        $pdo->rollBack();
+        error_log("Error deleting user: " . $e->getMessage());
+        return false;
+    }
+}
 ?>
