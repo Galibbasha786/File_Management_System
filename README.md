@@ -61,7 +61,6 @@ Example: Reject files larger than a specified limit.
 Logging and Monitoring:
 •	Log all file operations and authentication attempts.
 Example: Use ELK Stack for real-time monitoring.
-![image](https://github.com/user-attachments/assets/95d5f0e9-43e2-4855-9c26-8c119c191ae2
 Technology Used
 Programming Languages
 Backend: PHP, Java script.
