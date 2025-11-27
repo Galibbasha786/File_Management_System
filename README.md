@@ -29,23 +29,42 @@ Metadata viewing (e.g., file size, creation date).
 Threat detection for uploaded files.
 
 Logging and monitoring of user activities.
+
+
 Key Features:
 User Registration and Login:
+
 •	Users can register with a strong password and enable 2FA.
+
 Example: Use OTP via email for 2FA.
+
 Role-Based Access Control (RBAC):
+
 •	Admins can assign roles (e.g., Admin, User) and permissions.
+
 Example: Admins can delete,rename,share,download,upload files, while Users can only read/download/upload.
+
+
 Session Management:
+
 •	Use secure tokens (CRSF token and session_start( ) and session_destroyfrom PHP ) for session management.
+
 Example: Invalidate tokens after logout.
+
 Module 2: File Management and Encryption
+
 Key Features:
+
 File Upload and Download:
+
 •	Users can upload files, which are encrypted before storage.
+
 Example: Used AES-256 for encryption.
+
 File Sharing:
+
 •	Generate secure, expirable links for file sharing.
+
 Example: Share a file with 24-hour expiration.
 Metadata Viewing:
 •	Display file metadata (e.g., size, creation date, owner).
